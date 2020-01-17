@@ -26,3 +26,32 @@ Tiempo de culminación.
 Evaluaciones y cursos son en “ingles” totalmente. 
 Debe hacer provecho del uso de GIT & Github.
 """
+
+class Tablero:
+    def __init__(self):
+        
+        self.tablero = [
+            ['O', '-', 'O', '-', 'O', '-', 'O', '-'],
+            ['-', 'O', '-', 'O', '-', 'O', '-', 'O'],
+            ['O', '-', 'O', '-', 'O', '-', 'O', '-'],
+            ['-', '-', '-', '-', '-', '-', '-', '-'],
+            ['-', '-', '-', '-', '-', '-', '-', '-'],
+            ['-', 'X', '-', 'X', '-', 'X', '-', 'X'],
+            ['X', '-', 'X', '-', 'X', '-', 'X', '-'],
+            ['-', 'X', '-', 'X', '-', 'X', '-', 'X']]
+
+
+
+t = Tablero()
+
+print( t.tablero[7] )
+print( t.tablero[6] )
+print( t.tablero[5] )
+print( t.tablero[4] )
+print( t.tablero[3] )
+print( t.tablero[2] )
+print( t.tablero[1] )
+print( t.tablero[0] )
+
+# print( t.tablero[2][4])
+# print( t.tablero[3][5])
