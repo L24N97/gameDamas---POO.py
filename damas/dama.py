@@ -27,76 +27,151 @@ Evaluaciones y cursos son en “ingles” totalmente.
 Debe hacer provecho del uso de GIT & Github.
 """
 
-class Tablero:
-    def __init__(self, xCord, yCord):
-        self.xCord = xCord
-        self.yCord = yCord     
+# class Tablero:
+#     def __init__(self):
+#         pass
 
-    def imprimirTablero(self):
-        self.horizontal = "| A | B | C | D | E | F | G | H |"
-        print(self.horizontal, "\n")
+#     def tablero(self):
+#         self.horizontal = "| A | B | C | D | E | F | G | H |"
+#         print(self.horizontal, "\n")
 
-        self.count = 0 
-        for t in range(64):
-            print('|', end=' - ')
-            self.count += 1
-            if self.count == 8:
-                print('|', end='\n')
-                self.count = 0
-
+#         self.count = 0 
+#         for t in range(64):
+#             print('|', end=' - ')
+#             self.count += 1
+#             if self.count == 8:
+#                 print('|', end='\n')
+#                 self.count = 0
+  
+##################################
 
 
 class Juego:
-    def __init__(self):      
-        self.tablero = [
-            [' ', '-', ' ', '-', ' ', '-', ' ', '-'],
+
+    # Variable de clase
+    tablero = [
+            ['b', '-', 'b', '-', 'b', '-', 'b', '-'],
+            ['-', 'b', '-', 'b', '-', 'b', '-', 'b'],
+            ['b', '-', 'b', '-', 'b', '-', 'b', '-'],
             ['-', ' ', '-', ' ', '-', ' ', '-', ' '],
             [' ', '-', ' ', '-', ' ', '-', ' ', '-'],
-            ['-', ' ', '-', ' ', '-', ' ', '-', ' '],
-            [' ', '-', ' ', '-', ' ', '-', ' ', '-'],
-            ['-', ' ', '-', ' ', '-', ' ', '-', ' '],
-            [' ', '-', ' ', '-', ' ', '-', ' ', '-'],
-            ['-', ' ', '-', ' ', '-', ' ', '-', ' ']]
+            ['-', 'n', '-', 'n', '-', 'n', '-', 'n'],
+            ['n', '-', 'n', '-', 'n', '-', 'n', '-'],
+            ['-', 'n', '-', 'n', '-', 'n', '-', 'n']
+    ]
 
     def valores(self):
-        self.horizontal = "    A |  B |  C |  D |  E |  F |  G |  H |"
-        print(self.horizontal, "\n")
+        self.horizontal = "  | A |  B |  C |  D |  E |  F |  G |  H |"
+        print( self.horizontal, '\n' )
+        
+        # for i in range(1,8,2):
+        #     self.tablero[0].insert(i, 'b')
 
-        for i in range(1,8,2):
-            self.tablero[0].insert(i, 'b')
-
-        for i in range(0,8,2):
-            self.tablero[1].insert(i, 'b')
+        # for i in range(0,8,2):
+        #     self.tablero[1].insert(i, 'b')
             
-        for i in range(1,8,2):
-            self.tablero[2].insert(i, 'b')
+        # for i in range(1,8,2):
+        #     self.tablero[2].insert(i, 'b')
 
-        for i in range(0,8,2):
-            self.tablero[7].insert(i, 'n')
+        # for i in range(0,8,2):
+        #     self.tablero[7].insert(i, 'n')
 
-        for i in range(1,8,2):
-            self.tablero[6].insert(i, 'n')
+        # for i in range(1,8,2):
+        #     self.tablero[6].insert(i, 'n')
 
-        for i in range(0,8,2):
-            self.tablero[5].insert(i, 'n')
+        # for i in range(0,8,2):
+        #     self.tablero[5].insert(i, 'n')
 
-        for i, k in enumerate( self.tablero ):
-            print( i, k)
+        # ad = self.tablero[0][0]
+        # ga = ad.replace('b', 'h')
+        # print( ga )
+        
+        # ah = self.tablero[0]
+        # print( ah )
+
+        for i, k in enumerate( self.tablero, start=1 ):
+            print( i, k )
 
 
-    def posicion(self):
-        self.tablero[0] = {1: 'b', 2: '-', 3: 'b', 4: '-', 5: 'b', 6: '-', 7: 'b', 8: '-' }
-        self.tablero[1] = []
-        self.tablero[2] = []
-        self.tablero[3] = []
-        self.tablero[4] = []
-        self.tablero[5] = []
-        self.tablero[6] = []
-        self.tablero[7] = []
-                        
 # t = Juego()
-# t.valores()
-# # t.posicion()
+
+# print( t.valores() )
+
+class Position( Juego ):
+    def __init__(self, ficha, mover):
+        self.ficha = ficha
+        self.mover = mover
+
+        self.pos = ficha.split(',')
+        self.mov = mover.split(',')
+
+        for fila in range(8):
+            for col in range(8):
+                if fila == int(self.pos[0]) and col == int(self.pos[1]):
+
+                    if self.tablero[int(self.mov[0])][int(self.mov[1])] == ' ':
+                        self.tablero[int(self.mov[0])][int(self.mov[1])] = 'n'
+                        self.tablero[int(self.pos[0])][int(self.pos[1])] = ' '
+
+
+po = Position('2,0', '3,1')
+
+print( po.valores() )
+
+
+
+# class FichaInicial( Juego ):
+
+#     def __init__(self, row, col):
+#         self.row = row
+#         self.col = col
+        
+#     def __repr__(self):
+#         return self.tablero[ self.row ][ self.col ] 
+
+
+# f = FichaInicial(1, 1)
+# print( f.valores() )
+
+# class FichaFinal( Juego ):
+
+#     def __init__(self, x, y):
+#         self.x = x
+#         self.y = y
+
+#     def __repr__(self):
+#         return self.tablero[ self.x ][ self.y ]
+
+# # c = Columna(2,4)
+# # print( c )
+
+# class Jugador( object ):
+    
+#     def __init__(self):
+
+#         self.fichaI = FichaInicial(0, 0 )
+            
+#         value_row = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}    
+#         rowv = input('Selecciona la fila inicial >>> ')
+#         if rowv in value_row:
+#             self.x = rowv 
+#             colv = int( input( 'Selecciona la columna inicial >>> ' ) )
+#             if colv in range(0,8):
+#                 self.y = colv
+#             else:
+#                 print( "Columna fuera de rango. Intente de nuevo" )
+#         else:
+#             print( "Fila fuera de rango. Intente de nuevo" )
+
+
+
+#     # print( 'Las letras representan las filas y los numeros las columnas.\nVas a seleccionar tu pieza, luego la moveras.' )
+    
+# g = Jugador()
+# print( g )
+
+
+######################
 
 # print("  1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |")
 # for i in range(0,8):
@@ -110,7 +185,15 @@ class Juego:
 
 
 
-# def startBoard():
-#         colorPos = [[None] * 8 for i in range(8)] # [[None]*8]*8
-#         print(colorPos)
-# startBoard()
+# count = 0 
+# for t in range(64):
+#     print('|', end=' - ')
+#     count += 1
+#     if count == 8:
+#         print('|', end='\n')
+#         count = 0
+
+# count = 0
+# array = [ t for t in range(64) ] 
+# print( array )
+
