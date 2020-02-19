@@ -27,26 +27,7 @@ Evaluaciones y cursos son en “ingles” totalmente.
 Debe hacer provecho del uso de GIT & Github.
 """
 
-# class Tablero:
-#     def __init__(self):
-#         pass
-
-#     def tablero(self):
-#         self.horizontal = "| A | B | C | D | E | F | G | H |"
-#         print(self.horizontal, "\n")
-
-#         self.count = 0 
-#         for t in range(64):
-#             print('|', end=' - ')
-#             self.count += 1
-#             if self.count == 8:
-#                 print('|', end='\n')
-#                 self.count = 0
-  
-##################################
-
-
-class Juego:
+class Tablero:
 
     # Variable de clase
     tablero = [
@@ -61,43 +42,17 @@ class Juego:
     ]
 
     def valores(self):
-        self.horizontal = "  | A |  B |  C |  D |  E |  F |  G |  H |"
+        self.horizontal = "  | 0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |"
         print( self.horizontal, '\n' )
-        
-        # for i in range(1,8,2):
-        #     self.tablero[0].insert(i, 'b')
-
-        # for i in range(0,8,2):
-        #     self.tablero[1].insert(i, 'b')
-            
-        # for i in range(1,8,2):
-        #     self.tablero[2].insert(i, 'b')
-
-        # for i in range(0,8,2):
-        #     self.tablero[7].insert(i, 'n')
-
-        # for i in range(1,8,2):
-        #     self.tablero[6].insert(i, 'n')
-
-        # for i in range(0,8,2):
-        #     self.tablero[5].insert(i, 'n')
-
-        # ad = self.tablero[0][0]
-        # ga = ad.replace('b', 'h')
-        # print( ga )
-        
-        # ah = self.tablero[0]
-        # print( ah )
-
-        for i, k in enumerate( self.tablero, start=1 ):
+      
+        for i, k in enumerate( self.tablero ):
             print( i, k )
 
 
-# t = Juego()
-
+# t = Tablero()
 # print( t.valores() )
 
-class Position( Juego ):
+class Position( Tablero ):
     def __init__(self, ficha, mover):
         self.ficha = ficha
         self.mover = mover
@@ -105,19 +60,39 @@ class Position( Juego ):
         self.pos = ficha.split(',')
         self.mov = mover.split(',')
 
+        self.ficha_n = 'n'
+        self.ficha_b = 'b'
+        self.ficha_vacia = ' '
+        self.ficha_nula = '-'
+        self.select_ficha = None
+
         for fila in range(8):
-            for col in range(8):
-                if fila == int(self.pos[0]) and col == int(self.pos[1]):
+            for columna in range(8):
 
-                    if self.tablero[int(self.mov[0])][int(self.mov[1])] == ' ':
-                        self.tablero[int(self.mov[0])][int(self.mov[1])] = 'n'
-                        self.tablero[int(self.pos[0])][int(self.pos[1])] = ' '
+                # Detecta a que ficha pertenecen las coordenas ingresadas.
+                if self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] == 'n': self.select_ficha = self.ficha_n
+                elif self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] == 'b': self.select_ficha = self.ficha_b
+
+                # Mueve las fichas. 
+                if fila == int( self.pos[0] ) and columna == int( self.pos[1] ):
+                    if self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_vacia:
+                        self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] = self.select_ficha
+                        self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] = self.ficha_vacia
+
+                    if self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_nula or self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_vacia : 
+                        print("Seleccionar una ficha 'b' o 'n'")
 
 
-po = Position('2,0', '3,1')
+                        
 
-print( po.valores() )
 
+                    
+
+
+# izq = input('>> ')
+# der = input(">>> ")
+# po = Position( izq, der )
+# print( po.valores() )                
 
 
 # class FichaInicial( Juego ):
@@ -143,32 +118,63 @@ print( po.valores() )
 #         return self.tablero[ self.x ][ self.y ]
 
 # # c = Columna(2,4)
-# # print( c )
-
-# class Jugador( object ):
-    
-#     def __init__(self):
-
-#         self.fichaI = FichaInicial(0, 0 )
-            
-#         value_row = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}    
-#         rowv = input('Selecciona la fila inicial >>> ')
-#         if rowv in value_row:
-#             self.x = rowv 
-#             colv = int( input( 'Selecciona la columna inicial >>> ' ) )
-#             if colv in range(0,8):
-#                 self.y = colv
-#             else:
-#                 print( "Columna fuera de rango. Intente de nuevo" )
-#         else:
-#             print( "Fila fuera de rango. Intente de nuevo" )
-
+# # print( c )     
+        
 
 
 #     # print( 'Las letras representan las filas y los numeros las columnas.\nVas a seleccionar tu pieza, luego la moveras.' )
+
+
+def main():
+
+    i = 0
+    while i < 9:
+        po_izquierda = input('Selecciona la posicion inicial >>> ')
+        po_derecha = input('Selecciona la posicion final >>> ')
+
+        po = Position( po_izquierda, po_derecha )
+        # movimientoValido = True
+
+        print( po.valores () )
+
+        i += 1
+
+        print( )
+    # def posicion_ficha():
+    #     po_izquierda = input('Selecciona la fila inicial >>> ')
+    #     po_derecha = input('Selecciona la columna inicial >>> ')
+        
     
-# g = Jugador()
-# print( g )
+    # while movimientoValido:
+
+    #     print( po.valores() )
+
+
+
+
+
+        # if jugador == 'n': 
+        #     print('Mueven las negras.')
+        #     jugador = input('Que jugador eres: ')
+
+        # elif jugador == 'b':
+        #     print('Mueven las blancas.')
+        #     jugador = input('Que jugador eres: ')
+
+        # elif jugador == 'q': 
+        #     break
+
+        # else:
+        #     print("Ingrese 'n', 'b' o 'q'")
+        #     jugador = input('Que jugador eres: ')
+
+        
+
+
+if __name__ == "__main__":
+    main()
+
+
 
 
 ######################
@@ -192,8 +198,3 @@ print( po.valores() )
 #     if count == 8:
 #         print('|', end='\n')
 #         count = 0
-
-# count = 0
-# array = [ t for t in range(64) ] 
-# print( array )
-
