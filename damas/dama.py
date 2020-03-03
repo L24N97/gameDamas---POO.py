@@ -57,123 +57,91 @@ class Position( Tablero ):
         self.ficha = ficha
         self.mover = mover
 
+        # Variables de entrada
         self.pos = ficha.split(',')
         self.mov = mover.split(',')
 
+        # Definimos variables
         self.ficha_n = 'n'
         self.ficha_b = 'b'
         self.ficha_vacia = ' '
         self.ficha_nula = '-'
-        self.select_ficha = None
+        self.select_ficha = ' '
+        self.movimientoInicial = self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ]
+        self.movimientoFinal = self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ]
+        self.movimientoValido = False
+       
 
-        for fila in range(8):
-            for columna in range(8):
-
-                # Detecta a que ficha pertenecen las coordenas ingresadas.
-                if self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] == 'n': self.select_ficha = self.ficha_n
-                elif self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] == 'b': self.select_ficha = self.ficha_b
-
-                # Mueve las fichas. 
-                if fila == int( self.pos[0] ) and columna == int( self.pos[1] ):
-                    if self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_vacia:
-                        self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] = self.select_ficha
-                        self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] = self.ficha_vacia
-
-                    if self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_nula or self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_vacia : 
-                        print("Seleccionar una ficha 'b' o 'n'")
-
-
-                        
+    def selecFicha(self):
+        # Detecta a que ficha pertenecen las coordenas ingresadas.
+        self.movimientoValido
+        if  self.movimientoInicial != self.ficha_nula:
+            if self.movimientoFinal == 'n': 
+                self.select_ficha = self.ficha_n
+            elif self.movimientoInicial == 'b': 
+                self.select_ficha = self.ficha_b
+            else:
+                self.select_ficha = self.ficha_vacia
+        else:
+            print('Accion no permitida. Intentelo de nuevo')
 
 
-                    
+    def movimientoFichas(self):
+        # Movimiento En filas y Columnas
+        self.movOriRow = int( self.pos[0] )  
+        self.movFinRow = int( self.pos[1] ) 
+        self.movOriCol = int( self.mov[0] ) 
+        self.movFinCol = int( self.mov[1] ) 
+
+        self.numeroCasilla = abs( self.movOriRow - self.movOriCol )
+        self.numeroCasilla1 = abs( self.movFinRow - self.movFinCol )
+
+        if self.numeroCasilla == 1 and self.numeroCasilla1 == 1:
+            self.movimientoValido = True
 
 
-# izq = input('>> ')
-# der = input(">>> ")
-# po = Position( izq, der )
-# print( po.valores() )                
+    def player(self):
+        self.movimientoFichas()
 
+        if self.movimientoValido:
+            for fila in range(8):
+                for columna in range(8):
+                    self.selecFicha()
+                    # Inserta las fichas. 
+                    if fila == int( self.pos[0] ) and columna == int( self.pos[1] ):
+                        # Selecciona y coloca las fichas
+                        if self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_vacia:
+                            self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] = self.select_ficha
+                            self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] = self.ficha_vacia
+        else:
+            print('Movimiento NO valido. Intentelo de nuevo')
 
-# class FichaInicial( Juego ):
-
-#     def __init__(self, row, col):
-#         self.row = row
-#         self.col = col
-        
-#     def __repr__(self):
-#         return self.tablero[ self.row ][ self.col ] 
-
-
-# f = FichaInicial(1, 1)
-# print( f.valores() )
-
-# class FichaFinal( Juego ):
-
-#     def __init__(self, x, y):
-#         self.x = x
-#         self.y = y
-
-#     def __repr__(self):
-#         return self.tablero[ self.x ][ self.y ]
-
-# # c = Columna(2,4)
-# # print( c )     
-        
-
-
-#     # print( 'Las letras representan las filas y los numeros las columnas.\nVas a seleccionar tu pieza, luego la moveras.' )
-
+                                             
 
 def main():
 
+
+    # print( 'Las letras representan las filas y los numeros las columnas.\nVas a seleccionar tu pieza, luego la moveras.' )
+
     i = 0
     while i < 9:
+
         po_izquierda = input('Selecciona la posicion inicial >>> ')
         po_derecha = input('Selecciona la posicion final >>> ')
+        print( )
 
         po = Position( po_izquierda, po_derecha )
-        # movimientoValido = True
+        po.player()
+
 
         print( po.valores () )
 
         i += 1
 
-        print( )
-    # def posicion_ficha():
-    #     po_izquierda = input('Selecciona la fila inicial >>> ')
-    #     po_derecha = input('Selecciona la columna inicial >>> ')
-        
-    
-    # while movimientoValido:
-
-    #     print( po.valores() )
-
-
-
-
-
-        # if jugador == 'n': 
-        #     print('Mueven las negras.')
-        #     jugador = input('Que jugador eres: ')
-
-        # elif jugador == 'b':
-        #     print('Mueven las blancas.')
-        #     jugador = input('Que jugador eres: ')
-
-        # elif jugador == 'q': 
-        #     break
-
-        # else:
-        #     print("Ingrese 'n', 'b' o 'q'")
-        #     jugador = input('Que jugador eres: ')
-
-        
-
+        print( )       
 
 if __name__ == "__main__":
     main()
-
 
 
 
