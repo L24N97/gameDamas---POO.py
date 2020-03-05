@@ -74,9 +74,8 @@ class Position( Tablero ):
 
     def selecFicha(self):
         # Detecta a que ficha pertenecen las coordenas ingresadas.
-        self.movimientoValido
         if  self.movimientoInicial != self.ficha_nula:
-            if self.movimientoFinal == 'n': 
+            if self.movimientoInicial == 'n': 
                 self.select_ficha = self.ficha_n
             elif self.movimientoInicial == 'b': 
                 self.select_ficha = self.ficha_b
@@ -99,22 +98,52 @@ class Position( Tablero ):
         if self.numeroCasilla == 1 and self.numeroCasilla1 == 1:
             self.movimientoValido = True
 
+    
+    def comerFicha(self):
+
+        self.movimientoFichas()
+        # Come fichas negras
+        if  self.movimientoFinal == self.ficha_n:
+            if self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
+                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
+                self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] = self.movimientoInicial
+        # Come fichas blancas
+        elif self.movimientoFinal == self.ficha_b:
+            if self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
+                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
+                self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] = self.movimientoInicial 
+                
+
+    def convertirReina(self, coordenada, ficha):
+        self.coordenada = coordenada
+        self.ficha = ficha
+
+        if ( self.coordenada[0] == 7 ) and ( self.ficha == self.ficha_b ):
+            pass
+        elif ( self.coordenada[0] == 0 ) and (self.ficha == self.ficha_n ):
+            pass
+
 
     def player(self):
-        self.movimientoFichas()
 
+        self.movimientoFichas()
         if self.movimientoValido:
             for fila in range(8):
                 for columna in range(8):
                     self.selecFicha()
                     # Inserta las fichas. 
-                    if fila == int( self.pos[0] ) and columna == int( self.pos[1] ):
+                    if ( fila == int( self.pos[0] ) and columna == int( self.pos[1] ) ) != self.ficha_nula:
                         # Selecciona y coloca las fichas
-                        if self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_vacia:
-                            self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] = self.select_ficha
-                            self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] = self.ficha_vacia
+                        if self.movimientoFinal == self.ficha_vacia:
+                            self.tablero[ self.movOriCol ][ self.movFinCol ] = self.select_ficha
+                            self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
+                        self.comerFicha()
+
+                        
         else:
-            print('Movimiento NO valido. Intentelo de nuevo')
+            print('Movimiento NO valido. Intentelo de nuevo\n')
 
                                              
 
@@ -166,3 +195,4 @@ if __name__ == "__main__":
 #     if count == 8:
 #         print('|', end='\n')
 #         count = 0
+
