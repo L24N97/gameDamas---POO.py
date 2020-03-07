@@ -49,10 +49,8 @@ class Tablero:
             print( i, k )
 
 
-# t = Tablero()
-# print( t.valores() )
-
 class Position( Tablero ):
+
     def __init__(self, ficha, mover):
         self.ficha = ficha
         self.mover = mover
@@ -70,7 +68,6 @@ class Position( Tablero ):
         self.movimientoInicial = self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ]
         self.movimientoFinal = self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ]
         self.movimientoValido = False
-       
 
     def selecFicha(self):
         # Detecta a que ficha pertenecen las coordenas ingresadas.
@@ -84,7 +81,6 @@ class Position( Tablero ):
         else:
             print('Accion no permitida. Intentelo de nuevo')
 
-
     def movimientoFichas(self):
         # Movimiento En filas y Columnas
         self.movOriRow = int( self.pos[0] )  
@@ -97,11 +93,10 @@ class Position( Tablero ):
 
         if self.numeroCasilla == 1 and self.numeroCasilla1 == 1:
             self.movimientoValido = True
-
     
     def comerFicha(self):
-
         self.movimientoFichas()
+        
         # Come fichas negras
         if  self.movimientoFinal == self.ficha_n:
             if self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
@@ -115,20 +110,19 @@ class Position( Tablero ):
                 self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
                 self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] = self.movimientoInicial 
                 
-
-    def convertirReina(self, coordenada, ficha):
-        self.coordenada = coordenada
-        self.ficha = ficha
-
-        if ( self.coordenada[0] == 7 ) and ( self.ficha == self.ficha_b ):
-            pass
-        elif ( self.coordenada[0] == 0 ) and (self.ficha == self.ficha_n ):
-            pass
-
+    def convertirReina(self):
+        self.movimientoFichas()
+        
+        # Reina Blanca
+        if self.ficha_b in self.tablero[7]:
+            self.tablero[ self.movOriCol ][ self.movFinCol ] = 'B'
+        # Reina Negra
+        elif self.ficha_n in self.tablero[0]:
+            self.tablero[ self.movOriCol ][ self.movFinCol ] = 'N'
 
     def player(self):
-
         self.movimientoFichas()
+        
         if self.movimientoValido:
             for fila in range(8):
                 for columna in range(8):
@@ -140,7 +134,8 @@ class Position( Tablero ):
                             self.tablero[ self.movOriCol ][ self.movFinCol ] = self.select_ficha
                             self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
                         self.comerFicha()
-
+                        self.convertirReina()
+                        
                         
         else:
             print('Movimiento NO valido. Intentelo de nuevo\n')
@@ -150,10 +145,10 @@ class Position( Tablero ):
 def main():
 
 
-    # print( 'Las letras representan las filas y los numeros las columnas.\nVas a seleccionar tu pieza, luego la moveras.' )
+    # print( 'Primero seleccione la columna luego la fila deseada.\n' )
 
     i = 0
-    while i < 9:
+    while i < 15:
 
         po_izquierda = input('Selecciona la posicion inicial >>> ')
         po_derecha = input('Selecciona la posicion final >>> ')
