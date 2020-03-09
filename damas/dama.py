@@ -62,12 +62,15 @@ class Position( Tablero ):
         # Definimos variables
         self.ficha_n = 'n'
         self.ficha_b = 'b'
+        self.ficha_reina_negra = 'N'
+        self.ficha_reina_blanca = 'B'
         self.ficha_vacia = ' '
         self.ficha_nula = '-'
         self.select_ficha = ' '
         self.movimientoInicial = self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ]
         self.movimientoFinal = self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ]
         self.movimientoValido = False
+        self.jugador = self.select_ficha
 
     def selecFicha(self):
         # Detecta a que ficha pertenecen las coordenas ingresadas.
@@ -76,12 +79,18 @@ class Position( Tablero ):
                 self.select_ficha = self.ficha_n
             elif self.movimientoInicial == 'b': 
                 self.select_ficha = self.ficha_b
+            elif self.movimientoInicial == 'B':
+                self.select_ficha = self.ficha_reina_blanca
+            elif self.movimientoInicial == 'N':
+                self.select_ficha = self.ficha_reina_negra
             else:
                 self.select_ficha = self.ficha_vacia
         else:
             print('Accion no permitida. Intentelo de nuevo')
 
     def movimientoFichas(self):
+        self.selecFicha()
+        
         # Movimiento En filas y Columnas
         self.movOriRow = int( self.pos[0] )  
         self.movFinRow = int( self.pos[1] ) 
@@ -91,8 +100,17 @@ class Position( Tablero ):
         self.numeroCasilla = abs( self.movOriRow - self.movOriCol )
         self.numeroCasilla1 = abs( self.movFinRow - self.movFinCol )
 
+        # Comprueba si las coordenadas ingresadas son igual a 1
         if self.numeroCasilla == 1 and self.numeroCasilla1 == 1:
-            self.movimientoValido = True
+            # Movimiento en casillas ficha blancas            
+            if self.movimientoInicial == self.ficha_b:
+                if self.movOriCol > self.movOriRow:
+                    self.movimientoValido = True
+            # Movimiento en casillas fichas negras
+            elif self.movimientoInicial == self.ficha_n:
+                if self.movOriCol < self.movOriRow:
+                    self.movimientoValido = True
+
 
     def comerFicha(self):
         self.movimientoFichas()
@@ -123,7 +141,7 @@ class Position( Tablero ):
                 self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
                 self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] = self.movimientoInicial     
 
-                
+
     def convertirReina(self):
         self.movimientoFichas()
         
@@ -133,6 +151,32 @@ class Position( Tablero ):
         # Reina Negra
         elif self.ficha_n in self.tablero[0]:
             self.tablero[ self.movOriCol ][ self.movFinCol ] = 'N'
+
+    def movimientoReina(self):
+        self.convertirReina()
+
+        if self.movimientoFinal == self.ficha_reina_negra or self.movimientoFinal == self.ficha_reina_blanca:
+            # Come arriba a la derecha
+            if self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
+                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
+                self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] = self.movimientoInicial
+            # come arriba a la izquierda
+            elif self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
+                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
+                self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] = self.movimientoInicial
+            # Come abajo a la izquierda
+            elif self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
+                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
+                self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] = self.movimientoInicial 
+            # Come abajo a la derecha
+            elif self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
+                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
+                self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] = self.movimientoInicial     
+
 
     def player(self):
         self.movimientoFichas()
@@ -148,21 +192,49 @@ class Position( Tablero ):
                             self.tablero[ self.movOriCol ][ self.movFinCol ] = self.select_ficha
                             self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
                         self.comerFicha()
-                        self.convertirReina()
-                        
+                        # self.movimientoReina()                        
                         
         else:
             print('Movimiento NO valido. Intentelo de nuevo\n')
 
-                                             
+
+    def victoria(self):
+        self.selecFicha()
+
+        self.hay_negras = False
+        self.hay_blancas = False
+
+        for self.victorias in self.tablero:
+            for self.ganar in self.victorias:
+                if self.ganar == self.ficha_n:
+                    self.hay_negras = True 
+                elif self.ganar == self.ficha_b:
+                    self.hay_blancas = True                                     
 
 def main():
 
-
     # print( 'Primero seleccione la columna luego la fila deseada.\n' )
 
+    # po_izquierda = input('Selecciona la posicion inicial >>> ')
+    # po_derecha = input('Selecciona la posicion final >>> ')
+    # print( )
+    # po = Position( po_izquierda, po_derecha )
+    # po.player()    
+
+    # while po.movimientoValido:
+    #     if po.jugador == po.ficha_n:
+    #         po.jugador = po.ficha_b
+    #         print('Mueven las blancas: ')
+    #     else:
+    #         po.jugador = po.ficha_n
+    #         print('Mueven las negras: ')
+
+    #     print( po.valores () )
+    
+
+
     i = 0
-    while i < 15:
+    while i < 25:
 
         po_izquierda = input('Selecciona la posicion inicial >>> ')
         po_derecha = input('Selecciona la posicion final >>> ')
@@ -170,8 +242,7 @@ def main():
 
         po = Position( po_izquierda, po_derecha )
         po.player()
-
-
+            
         print( po.valores () )
 
         i += 1
