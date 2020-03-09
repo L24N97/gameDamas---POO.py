@@ -93,22 +93,36 @@ class Position( Tablero ):
 
         if self.numeroCasilla == 1 and self.numeroCasilla1 == 1:
             self.movimientoValido = True
-    
+
     def comerFicha(self):
         self.movimientoFichas()
         
         # Come fichas negras
         if  self.movimientoFinal == self.ficha_n:
+            # Come a la derecha
             if self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
                 self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
                 self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
                 self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] = self.movimientoInicial
-        # Come fichas blancas
+            # Come a la izquierda
+            elif self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
+                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
+                self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] = self.movimientoInicial
+
+        # # Come fichas blancas
         elif self.movimientoFinal == self.ficha_b:
+            # Come a la izquierda
             if self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
                 self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
                 self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
                 self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] = self.movimientoInicial 
+            # Come a la derecha
+            elif self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
+                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
+                self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] = self.movimientoInicial     
+
                 
     def convertirReina(self):
         self.movimientoFichas()
