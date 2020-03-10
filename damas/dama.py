@@ -74,6 +74,7 @@ class Position( Tablero ):
 
     def selecFicha(self):
         # Detecta a que ficha pertenecen las coordenas ingresadas.
+        
         if  self.movimientoInicial != self.ficha_nula:
             if self.movimientoInicial == 'n': 
                 self.select_ficha = self.ficha_n
@@ -156,6 +157,7 @@ class Position( Tablero ):
         self.convertirReina()
 
         if self.movimientoFinal == self.ficha_reina_negra or self.movimientoFinal == self.ficha_reina_blanca:
+            
             # Come arriba a la derecha
             if self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
                 self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
@@ -192,7 +194,7 @@ class Position( Tablero ):
                             self.tablero[ self.movOriCol ][ self.movFinCol ] = self.select_ficha
                             self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
                         self.comerFicha()
-                        # self.movimientoReina()                        
+                        self.movimientoReina()                        
                         
         else:
             print('Movimiento NO valido. Intentelo de nuevo\n')
