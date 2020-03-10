@@ -111,6 +111,12 @@ class Position( Tablero ):
             elif self.movimientoInicial == self.ficha_n:
                 if self.movOriCol < self.movOriRow:
                     self.movimientoValido = True
+            # Movimiento en casillas reina blanca
+            elif self.movimientoInicial == self.ficha_reina_blanca:
+                self.movimientoValido = True
+            # Movimiento en casillas reina negra
+            elif self.movimientoInicial == self.ficha_reina_negra:
+                self.movimientoValido = True
 
 
     def comerFicha(self):
