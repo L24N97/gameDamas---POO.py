@@ -26,6 +26,7 @@ Tiempo de culminación.
 Evaluaciones y cursos son en “ingles” totalmente. 
 Debe hacer provecho del uso de GIT & Github.
 """
+import os
 
 class Tablero:
 
@@ -42,6 +43,7 @@ class Tablero:
     ]
 
     def valores(self):
+        # Imprimir tablero
         self.horizontal = "  | 0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |"
         print( self.horizontal, '\n' )
       
@@ -66,15 +68,15 @@ class Position( Tablero ):
         self.ficha_reina_blanca = 'B'
         self.ficha_vacia = ' '
         self.ficha_nula = '-'
-        self.select_ficha = ' '
+        self.select_ficha = ''
         self.movimientoInicial = self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ]
         self.movimientoFinal = self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ]
         self.movimientoValido = False
-        self.jugador = self.select_ficha
+        self.jugador = self.ficha_n
 
     def selecFicha(self):
-        # Detecta a que ficha pertenecen las coordenas ingresadas.
         
+        # Detecta a que ficha pertenecen las coordenas ingresadas.
         if  self.movimientoInicial != self.ficha_nula:
             if self.movimientoInicial == 'n': 
                 self.select_ficha = self.ficha_n
@@ -93,99 +95,142 @@ class Position( Tablero ):
         self.selecFicha()
         
         # Movimiento En filas y Columnas
-        self.movOriRow = int( self.pos[0] )  
+        self.movOriRow = int( self.pos[0] ) 
         self.movFinRow = int( self.pos[1] ) 
         self.movOriCol = int( self.mov[0] ) 
         self.movFinCol = int( self.mov[1] ) 
 
         self.numeroCasilla = abs( self.movOriRow - self.movOriCol )
         self.numeroCasilla1 = abs( self.movFinRow - self.movFinCol )
-
+        
         # Comprueba si las coordenadas ingresadas son igual a 1
         if self.numeroCasilla == 1 and self.numeroCasilla1 == 1:
-            # Movimiento en casillas ficha blancas            
+            # Movimiento en casillas ficha blancas
             if self.movimientoInicial == self.ficha_b:
                 if self.movOriCol > self.movOriRow:
                     self.movimientoValido = True
+
             # Movimiento en casillas fichas negras
             elif self.movimientoInicial == self.ficha_n:
                 if self.movOriCol < self.movOriRow:
                     self.movimientoValido = True
+            
             # Movimiento en casillas reina blanca
             elif self.movimientoInicial == self.ficha_reina_blanca:
                 self.movimientoValido = True
+            
             # Movimiento en casillas reina negra
             elif self.movimientoInicial == self.ficha_reina_negra:
                 self.movimientoValido = True
-
-
+    
     def comerFicha(self):
         self.movimientoFichas()
         
         # Come fichas negras
-        if  self.movimientoFinal == self.ficha_n:
-            # Come a la derecha
-            if self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
-                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
-                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
-                self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] = self.movimientoInicial
-            # Come a la izquierda
-            elif self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
-                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
-                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
-                self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] = self.movimientoInicial
-
-        # # Come fichas blancas
-        elif self.movimientoFinal == self.ficha_b:
-            # Come a la izquierda
-            if self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
-                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
-                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
-                self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] = self.movimientoInicial 
-            # Come a la derecha
-            elif self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
-                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
-                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
-                self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] = self.movimientoInicial     
-
+        if self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] == self.ficha_b:
+            if  self.movimientoFinal == self.ficha_n:
+                # Come a la derecha
+                if self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
+                    self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                    self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
+                    self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] = self.movimientoInicial
+                # Come a la izquierda
+                elif self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
+                    self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                    self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
+                    self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] = self.movimientoInicial
+        
+        # Come fichas blancas
+        elif self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] == self.ficha_n:
+            if self.movimientoFinal == self.ficha_b:
+                # Come a la izquierda
+                if self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
+                    self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                    self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
+                    self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] = self.movimientoInicial 
+                # Come a la derecha
+                elif self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
+                    self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+                    self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
+                    self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] = self.movimientoInicial     
 
     def convertirReina(self):
         self.movimientoFichas()
-        
+
         # Reina Blanca
         if self.ficha_b in self.tablero[7]:
-            self.tablero[ self.movOriCol ][ self.movFinCol ] = 'B'
+            self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_reina_blanca
         # Reina Negra
-        elif self.ficha_n in self.tablero[0]:
-            self.tablero[ self.movOriCol ][ self.movFinCol ] = 'N'
-
-    def movimientoReina(self):
-        self.convertirReina()
-
-        if self.movimientoFinal == self.ficha_reina_negra or self.movimientoFinal == self.ficha_reina_blanca:
+        elif self.ficha_n in self.tablero[0]: 
+            self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_reina_negra
             
-            # Come arriba a la derecha
-            if self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
-                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
-                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
-                self.tablero[ self.movOriRow + 2 ][ self.movFinRow + 2 ] = self.movimientoInicial
-            # come arriba a la izquierda
-            elif self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
-                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
-                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
-                self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] = self.movimientoInicial
-            # Come abajo a la izquierda
-            elif self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] == self.ficha_vacia:
-                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
-                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
-                self.tablero[ self.movOriRow - 2 ][ self.movFinRow - 2 ] = self.movimientoInicial 
-            # Come abajo a la derecha
-            elif self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] == self.ficha_vacia:
-                self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
-                self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
-                self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] = self.movimientoInicial     
-
-
+    def movimientoReina(self):
+        self.convertirReina()                
+        
+        def comeArribaDerecha(self):
+            self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+            self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
+            self.tablero[ self.movOriCol - 1 ][ self.movFinCol + 1 ] = self.movimientoInicial
+        
+        def comeArribaIzquierda(Self):
+            self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+            self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
+            self.tablero[ self.movOriCol - 1 ][ self.movFinCol - 1 ] = self.movimientoInicial
+        
+        def comeAbajoIzquierda(self):
+            self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+            self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
+            self.tablero[ self.movOriCol + 1 ][ self.movFinCol - 1 ] = self.movimientoInicial
+        
+        def comeAbajoDerecha(self):
+            self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
+            self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
+            self.tablero[ self.movOriCol + 1 ][ self.movFinCol + 1 ] = self.movimientoInicial
+        
+        # Comprueba si la reina negra puede comer
+        if self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] == self.ficha_reina_negra:
+            if self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_b or self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_reina_blanca:
+       
+                # Comprueba si se come hacia abajo derecha
+                if self.movOriCol > self.movOriRow and self.movFinCol > self.movFinRow:
+                    if self.tablero[ int( self.mov[0] ) + 1  ][ int( self.mov[1] ) + 1 ] == self.ficha_vacia:
+                        return comeAbajoDerecha(self)
+                # Comprueba si se come hacia abajo izquierda
+                elif self.movOriCol > self.movOriRow and self.movFinCol < self.movFinRow:
+                    if self.tablero[ int( self.mov[0] ) + 1 ][ int( self.mov[1] ) - 1 ] == self.ficha_vacia:
+                        return comeAbajoIzquierda(self)
+                                   
+                # Comprueba si se come hacia arriba izquierda
+                if self.movOriCol < self.movOriRow and self.movFinCol < self.movFinRow:  
+                    if self.tablero[ int( self.mov[0] ) - 1 ][ int( self.mov[1] ) - 1 ] == self.ficha_vacia:
+                        return comeArribaIzquierda(self)    
+                # Comprueba si se come hacia arriba derecha
+                elif self.movOriCol < self.movOriRow and self.movFinCol > self.movFinRow:  
+                    if self.tablero[ int( self.mov[0] ) - 1 ][ int( self.mov[1] ) + 1 ] == self.ficha_vacia:
+                        return comeArribaDerecha(self)
+        
+        # Comprueba si la reina blanca puede comer
+        elif self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] == self.ficha_reina_blanca:
+            if self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_n or self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ] == self.ficha_reina_negra:
+                                
+                # Comprueba si se come hacia abajo derecha
+                if self.movOriCol > self.movOriRow and self.movFinCol > self.movFinRow:
+                    if self.tablero[ int( self.mov[0] ) + 1  ][ int( self.mov[1] ) + 1 ] == self.ficha_vacia:
+                        return comeAbajoDerecha(self)
+                # Comprueba si se come hacia abajo izquierda
+                elif self.movOriCol > self.movOriRow and self.movFinCol < self.movFinRow:
+                    if self.tablero[ int( self.mov[0] ) + 1 ][ int( self.mov[1] ) - 1 ] == self.ficha_vacia:
+                        return comeAbajoIzquierda(self)
+                                   
+                # Comprueba si se come hacia arriba izquierda
+                if self.movOriCol < self.movOriRow and self.movFinCol < self.movFinRow:  
+                    if self.tablero[ int( self.mov[0] ) - 1 ][ int( self.mov[1] ) - 1 ] == self.ficha_vacia:
+                        return comeArribaIzquierda(self)    
+                # Comprueba si se come hacia arriba derecha
+                elif self.movOriCol < self.movOriRow and self.movFinCol > self.movFinRow:  
+                    if self.tablero[ int( self.mov[0] ) - 1 ][ int( self.mov[1] ) + 1 ] == self.ficha_vacia:
+                        return comeArribaDerecha(self)
+        
     def player(self):
         self.movimientoFichas()
         
@@ -205,7 +250,6 @@ class Position( Tablero ):
         else:
             print('Movimiento NO valido. Intentelo de nuevo\n')
 
-
     def victoria(self):
         self.selecFicha()
 
@@ -214,64 +258,59 @@ class Position( Tablero ):
 
         for self.victorias in self.tablero:
             for self.ganar in self.victorias:
-                if self.ganar == self.ficha_n:
+                if self.ganar == self.ficha_n or self.ganar == self.ficha_reina_negra:
                     self.hay_negras = True 
-                elif self.ganar == self.ficha_b:
-                    self.hay_blancas = True                                     
+                elif self.ganar == self.ficha_b or self.ganar == self.ficha_reina_blanca:
+                    self.hay_blancas = True  
+
+        if self.hay_blancas and self.hay_negras:
+            return False
+        else:
+            return True                                   
+
 
 def main():
 
-    # print( 'Primero seleccione la columna luego la fila deseada.\n' )
+    print( 'Bienvenidos al juego de damas.')
+    print( 'Primero seleccione la columna luego la fila deseada.\n' )
 
-    # po_izquierda = input('Selecciona la posicion inicial >>> ')
-    # po_derecha = input('Selecciona la posicion final >>> ')
-    # print( )
-    # po = Position( po_izquierda, po_derecha )
-    # po.player()    
-
-    # while po.movimientoValido:
-    #     if po.jugador == po.ficha_n:
-    #         po.jugador = po.ficha_b
-    #         print('Mueven las blancas: ')
-    #     else:
-    #         po.jugador = po.ficha_n
-    #         print('Mueven las negras: ')
-
-    #     print( po.valores () )
+    # Imprime el tablero de tablero estandar
+    for x in Tablero.tablero:
+        print( x )
     
-
-
-    i = 0
-    while i < 25:
+    while True:
 
         po_izquierda = input('Selecciona la posicion inicial >>> ')
         po_derecha = input('Selecciona la posicion final >>> ')
         print( )
-
         po = Position( po_izquierda, po_derecha )
-        po.player()
-            
+        po.player()    
+        os.system ("cls") 
         print( po.valores () )
-
-        i += 1
-
-        print( )       
+        
+        if po.victoria():
+            if (po.jugador == po.ficha_n) or (po.jugador == po.ficha_reina_negra):
+                print(" --- GANAN LAS NEGRAS ! --- ")
+                break
+            else:
+                print( "--- GANAN LAS BLANCAS ! --- ")
+                break
 
 if __name__ == "__main__":
     main()
 
 
 
-######################
+#####################
 
 # print("  1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |")
 # for i in range(0,8):
 #             print("-"*32)
-#             print(chr(i+97),end="| ")
+#             print(chr(i+97),end="|")
 #             for j in range(0,8):
 #                 item = ((i,j)," ")
-#                 print(str(item)+' |', end = " ")
-#             print()
+#                 print(str(item)+'|', end = " ")
+# #             print()
 #             print("-"*32)
 
 
