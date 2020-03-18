@@ -41,7 +41,7 @@ class Tablero:
             ['n', '-', 'n', '-', 'n', '-', 'n', '-'],
             ['-', 'n', '-', 'n', '-', 'n', '-', 'n']
     ]
-
+    
     def valores(self):
         # Imprimir tablero
         self.horizontal = "  | 0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |"
@@ -49,6 +49,7 @@ class Tablero:
       
         for i, k in enumerate( self.tablero ):
             print( i, k )
+        return '' # Crear espacio en blanco luego del tablero
 
 
 class Position( Tablero ):
@@ -72,7 +73,8 @@ class Position( Tablero ):
         self.movimientoInicial = self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ]
         self.movimientoFinal = self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ]
         self.movimientoValido = False
-        self.jugador = self.ficha_n
+        self.jugador = self.ficha_b
+        self.turno = 1
 
     def selecFicha(self):
         
@@ -95,10 +97,10 @@ class Position( Tablero ):
         self.selecFicha()
         
         # Movimiento En filas y Columnas
-        self.movOriRow = int( self.pos[0] ) 
-        self.movFinRow = int( self.pos[1] ) 
-        self.movOriCol = int( self.mov[0] ) 
-        self.movFinCol = int( self.mov[1] ) 
+        self.movOriRow = int( self.pos[0] ) # MOVimientoORIginalROW
+        self.movFinRow = int( self.pos[1] ) # MOVimientoFINalROW
+        self.movOriCol = int( self.mov[0] ) # MOVimientoORIginalCOLum
+        self.movFinCol = int( self.mov[1] ) # MOVimientoFINalCOLum
 
         self.numeroCasilla = abs( self.movOriRow - self.movOriCol )
         self.numeroCasilla1 = abs( self.movFinRow - self.movFinCol )
@@ -156,7 +158,7 @@ class Position( Tablero ):
 
     def convertirReina(self):
         self.movimientoFichas()
-
+        
         # Reina Blanca
         if self.ficha_b in self.tablero[7]:
             self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_reina_blanca
@@ -245,8 +247,7 @@ class Position( Tablero ):
                             self.tablero[ self.movOriCol ][ self.movFinCol ] = self.select_ficha
                             self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
                         self.comerFicha()
-                        self.movimientoReina()                        
-                        
+                        self.movimientoReina()                       
         else:
             print('Movimiento NO valido. Intentelo de nuevo\n')
 
@@ -269,57 +270,66 @@ class Position( Tablero ):
             return True                                   
 
 
+# Ejecuta el programa 
 def main():
 
-    print( 'Bienvenidos al juego de damas.')
+    print( '\nBienvenidos al juego de damas.')
     print( 'Primero seleccione la columna luego la fila deseada.\n' )
 
     # Imprime el tablero de tablero estandar
-    for x in Tablero.tablero:
-        print( x )
-    
-    while True:
+    board = Tablero()
+    print( board.valores() )
 
-        po_izquierda = input('Selecciona la posicion inicial >>> ')
-        po_derecha = input('Selecciona la posicion final >>> ')
+
+    # Corre el juego 
+    while True:
+        
+        posicion_inicial = input('Selecciona la posicion inicial >>> ') 
+        while True:
+            if len(posicion_inicial) != 3 or posicion_inicial[1] != ',' or ( posicion_inicial[0] < '0' or posicion_inicial[0] > '7') or ( posicion_inicial[2] < '0' or posicion_inicial[2] > '7' ):
+                print( 'Coordenadas ingresadas son incorrectas. Intentelo de nuevo' )
+                posicion_inicial = input('Selecciona la posicion inicial >>> ') 
+            else:
+                break
+
+        posicion_final = input('Selecciona la posicion final >>> ')
+        while True:
+            if len(posicion_final) != 3 or posicion_final[1] != ',' or ( posicion_final[0] < '0' or posicion_final[0] > '7') or ( posicion_final[2] < '0' or posicion_final[2] > '7' ):
+                print( 'Coordenadas ingresadas son incorrectas. Intentelo de nuevo' )
+                posicion_final = input('Selecciona la posicion final >>> ')           
+            else:
+                break
+
+
         print( )
-        po = Position( po_izquierda, po_derecha )
+        po = Position( posicion_inicial, posicion_final )
         po.player()    
-        os.system ("cls") 
-        print( po.valores () )
+        # os.system ("cls") # Limpia la consola  
+            
+        print( po.valores() )
+        print( int( po.pos[0] ) == po.movOriRow )
         
         if po.victoria():
             if (po.jugador == po.ficha_n) or (po.jugador == po.ficha_reina_negra):
                 print(" --- GANAN LAS NEGRAS ! --- ")
                 break
             else:
-                print( "--- GANAN LAS BLANCAS ! --- ")
+                print( " --- GANAN LAS BLANCAS ! --- ")
                 break
 
 if __name__ == "__main__":
     main()
 
+"""
+Convertir a reina comiendo la penultima casilla,
+verificar comer piezas en todas las posiciones disponibles,
+datos ingresados sean los correctos o volver a intentarlo,
+turno de jugadores.
+"""
 
+# while True:
+    
+#     for x in range(2):
+#         print(x)
 
-#####################
-
-# print("  1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |")
-# for i in range(0,8):
-#             print("-"*32)
-#             print(chr(i+97),end="|")
-#             for j in range(0,8):
-#                 item = ((i,j)," ")
-#                 print(str(item)+'|', end = " ")
-# #             print()
-#             print("-"*32)
-
-
-
-# count = 0 
-# for t in range(64):
-#     print('|', end=' - ')
-#     count += 1
-#     if count == 8:
-#         print('|', end='\n')
-#         count = 0
-
+        
