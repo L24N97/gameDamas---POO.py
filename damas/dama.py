@@ -50,19 +50,20 @@ class Tablero:
         for i, k in enumerate( self.tablero ):
             print( i, k )
         return '' # Crear espacio en blanco luego del tablero
-
+       
 
 class Position( Tablero ):
 
-    def __init__(self, ficha, mover):
+    def __init__(self, ficha, mover, turno):
         self.ficha = ficha
         self.mover = mover
+        self.turno = turno
 
         # Variables de entrada
         self.pos = ficha.split(',')
         self.mov = mover.split(',')
 
-        # Definimos variables
+        # Definimos variables a utilizar
         self.ficha_n = 'n'
         self.ficha_b = 'b'
         self.ficha_reina_negra = 'N'
@@ -73,8 +74,7 @@ class Position( Tablero ):
         self.movimientoInicial = self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ]
         self.movimientoFinal = self.tablero[ int( self.mov[0] ) ][ int( self.mov[1] ) ]
         self.movimientoValido = False
-        self.jugador = self.ficha_b
-        self.turno = 1
+        self.jugador = self.select_ficha
 
     def selecFicha(self):
         
@@ -107,24 +107,32 @@ class Position( Tablero ):
         
         # Comprueba si las coordenadas ingresadas son igual a 1
         if self.numeroCasilla == 1 and self.numeroCasilla1 == 1:
-            # Movimiento en casillas ficha blancas
-            if self.movimientoInicial == self.ficha_b:
-                if self.movOriCol > self.movOriRow:
+            # Determina el turno del jugador. | Jugador blancas 
+            if self.turno == 0:
+                # Movimiento en casillas ficha blancas
+                if self.movimientoInicial == self.ficha_b:
+                    if self.movOriCol > self.movOriRow:
+                        self.movimientoValido = True
+
+                # Movimiento en casillas reina blanca
+                elif self.movimientoInicial == self.ficha_reina_blanca:
                     self.movimientoValido = True
 
-            # Movimiento en casillas fichas negras
-            elif self.movimientoInicial == self.ficha_n:
-                if self.movOriCol < self.movOriRow:
+            # Determina el turno del jugador. | Jugador negras    
+            elif self.turno == 1:
+                # Movimiento en casillas fichas negras
+                if self.movimientoInicial == self.ficha_n:
+                    if self.movOriCol < self.movOriRow:
+                        self.movimientoValido = True
+                
+                # Movimiento en casillas reina negra
+                elif self.movimientoInicial == self.ficha_reina_negra:
                     self.movimientoValido = True
-            
-            # Movimiento en casillas reina blanca
-            elif self.movimientoInicial == self.ficha_reina_blanca:
-                self.movimientoValido = True
-            
-            # Movimiento en casillas reina negra
-            elif self.movimientoInicial == self.ficha_reina_negra:
-                self.movimientoValido = True
-    
+
+            else:
+                print('\t\tTurno no definido')
+                self.movimientoValido = False
+
     def comerFicha(self):
         self.movimientoFichas()
         
@@ -246,7 +254,7 @@ class Position( Tablero ):
                         if self.movimientoFinal == self.ficha_vacia:
                             self.tablero[ self.movOriCol ][ self.movFinCol ] = self.select_ficha
                             self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
-                        self.comerFicha()
+                        self.comerFicha() 
                         self.movimientoReina()                       
         else:
             print('Movimiento NO valido. Intentelo de nuevo\n')
@@ -274,16 +282,24 @@ class Position( Tablero ):
 def main():
 
     print( '\nBienvenidos al juego de damas.')
-    print( 'Primero seleccione la columna luego la fila deseada.\n' )
+    print( 'Primero seleccione la columna luego la fila deseada.\nLos numeros deben estar separados por coma\n' )
 
     # Imprime el tablero de tablero estandar
     board = Tablero()
     print( board.valores() )
-
+    turnox = 0 # Determina el turno del jugador
 
     # Corre el juego 
-    while True:
-        
+    while True:        
+
+        if turnox == 0:
+            turnox = 1
+            print('Mueven las negras')
+        elif turnox == 1:
+            turnox = 0
+            print('Mueven las blancas')        
+
+
         posicion_inicial = input('Selecciona la posicion inicial >>> ') 
         while True:
             if len(posicion_inicial) != 3 or posicion_inicial[1] != ',' or ( posicion_inicial[0] < '0' or posicion_inicial[0] > '7') or ( posicion_inicial[2] < '0' or posicion_inicial[2] > '7' ):
@@ -300,14 +316,11 @@ def main():
             else:
                 break
 
-
-        print( )
-        po = Position( posicion_inicial, posicion_final )
-        po.player()    
-        # os.system ("cls") # Limpia la consola  
-            
+        print( ) # Crea espacio en blanco
+        po = Position( posicion_inicial, posicion_final, turnox )
+        po.player()        
+        os.system ("cls") # Limpia la consola            
         print( po.valores() )
-        print( int( po.pos[0] ) == po.movOriRow )
         
         if po.victoria():
             if (po.jugador == po.ficha_n) or (po.jugador == po.ficha_reina_negra):
@@ -319,17 +332,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-"""
-Convertir a reina comiendo la penultima casilla,
-verificar comer piezas en todas las posiciones disponibles,
-datos ingresados sean los correctos o volver a intentarlo,
-turno de jugadores.
-"""
-
-# while True:
-    
-#     for x in range(2):
-#         print(x)
-
-        
