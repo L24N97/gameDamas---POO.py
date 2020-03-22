@@ -1,31 +1,3 @@
-""" 
-Juego de Damas: 
-
-Tomar en cuenta:  
-
--Investigar en qué consiste el juego.  
--Que el proyecto sea hecho a partir de lo aprendido en el curso de programación.  
--No enfocarse en gráficos ni nada relacionado a eso, solo a nivel de lógica. 
--Calidad del código. 
--Funcionamiento. 
-
-Estructura lógica: 
-
-Debe desarrollar la lógica para repartir los Damas.
-Debe implementar la lógica del juego de Damas.
-Debe tener un sistema de turnos y jugadores.
-Debe tener sistema de puntuación según lo establecen las reglas del juego.
-Propósito: Aplicar toda la estructura lógica con a través del uso del paradigma de Orientación a Objetos.
-
-Criterios de evaluación. 
-
-No aceptamos plagio de código. 
-Culminación total del ejercicio. 
-Evaluar la lógica/resolución de problemas. 
-Tiempo de culminación.  
-Evaluaciones y cursos son en “ingles” totalmente. 
-Debe hacer provecho del uso de GIT & Github.
-"""
 import os
 
 class Tablero:
@@ -319,8 +291,21 @@ def main():
         print( ) # Crea espacio en blanco
         po = Position( posicion_inicial, posicion_final, turnox )
         po.player()        
-        os.system ("cls") # Limpia la consola            
-        print( po.valores() )
+        os.system ("cls") # Limpia la consola    
+        
+        while True: # Repite turno si las coordenadas ingresadas son incorrectas
+            if ( not turnox == 0 and po.movimientoInicial == po.ficha_b ) or ( not turnox == 0 and po.movimientoInicial == po.ficha_reina_blanca ) or ( not turnox == 0 and po.movimientoValido == False ):
+                print('Debes mover las fichas negras. Movimiento NO valido\n')
+                turnox = 0
+                break
+            elif ( not turnox == 1 and po.movimientoInicial == po.ficha_n) or ( not turnox == 1 and po.movimientoInicial == po.ficha_reina_negra ) or ( not turnox == 1 and po.movimientoValido == False ):
+                print('Debes mover las fichas blancas. Movimiento NO valido\n')
+                turnox = 1
+                break
+            else:
+                break
+
+        print( po.valores() ) # Imprime el tablero actualizado.
         
         if po.victoria():
             if (po.jugador == po.ficha_n) or (po.jugador == po.ficha_reina_negra):
