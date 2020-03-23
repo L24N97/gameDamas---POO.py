@@ -121,7 +121,7 @@ class Position( Tablero ):
                     self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
                     self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia 
                     self.tablero[ self.movOriRow + 2 ][ self.movFinRow - 2 ] = self.movimientoInicial
-        
+            
         # Come fichas blancas
         elif self.tablero[ int( self.pos[0] ) ][ int( self.pos[1] ) ] == self.ficha_n:
             if self.movimientoFinal == self.ficha_b:
@@ -135,7 +135,7 @@ class Position( Tablero ):
                     self.tablero[ self.movOriCol ][ self.movFinCol ] = self.ficha_vacia
                     self.tablero[ self.movOriRow ][ self.movFinRow ] = self.ficha_vacia
                     self.tablero[ self.movOriRow - 2 ][ self.movFinRow + 2 ] = self.movimientoInicial     
-
+    
     def convertirReina(self):
         self.movimientoFichas()
         
@@ -264,6 +264,7 @@ def main():
     # Corre el juego 
     while True:        
 
+        # Determina el turno del jugador
         if turnox == 0:
             turnox = 1
             print('Mueven las negras')
@@ -292,7 +293,7 @@ def main():
         po = Position( posicion_inicial, posicion_final, turnox )
         po.player()        
         os.system ("cls") # Limpia la consola    
-        
+
         while True: # Repite turno si las coordenadas ingresadas son incorrectas
             if ( not turnox == 0 and po.movimientoInicial == po.ficha_b ) or ( not turnox == 0 and po.movimientoInicial == po.ficha_reina_blanca ) or ( not turnox == 0 and po.movimientoValido == False ):
                 print('Debes mover las fichas negras. Movimiento NO valido\n')
@@ -311,9 +312,11 @@ def main():
             if (po.jugador == po.ficha_n) or (po.jugador == po.ficha_reina_negra):
                 print(" --- GANAN LAS NEGRAS ! --- ")
                 break
-            else:
+            elif (po.jugador == po.ficha_b) or (po.jugador == po.ficha_reina_blanca):
                 print( " --- GANAN LAS BLANCAS ! --- ")
                 break
+            else:
+                continue
 
 if __name__ == "__main__":
     main()
